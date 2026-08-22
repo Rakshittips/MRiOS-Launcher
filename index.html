@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MRiOS Launcher — iPhone Style-Ui</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#07060c;
+    --bg2:#0c0a16;
+    --mercury:#c7cbd6;
+    --cyan:#6fe3ff;
+    --violet:#a78bfa;
+    --pink:#f472b6;
+    --text:#eceaf2;
+    --dim:#9691ab;
+    --glass:rgba(255,255,255,0.035);
+    --glass-brd:rgba(255,255,255,0.16);
+    --glass-blur:blur(16px) saturate(160%);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Plus Jakarta Sans', sans-serif;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior-y:none;
+  }
+  /* reusable liquid-glass panel: frosted blur + specular top edge + soft inner depth */
+  .glass{
+    position:relative;
+    background:var(--glass);
+    border:1px solid var(--glass-brd);
+    -webkit-backdrop-filter:var(--glass-blur);
+    backdrop-filter:var(--glass-blur);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.25),
+      inset 0 -1px 0 rgba(255,255,255,0.03),
+      inset 0 0 40px rgba(255,255,255,0.02),
+      0 8px 30px -12px rgba(0,0,0,0.55);
+  }
+  .glass::before{
+    content:'';
+    position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+    background:linear-gradient(135deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.02) 30%, transparent 55%);
+  }
+  h1,h2,h3,.display{
+    font-family:'Plus Jakarta Sans', sans-serif;
+    font-weight:800;
+    letter-spacing:-0.02em;
+  }
+  a{color:inherit; text-decoration:none;}
+  ::selection{background:var(--violet); color:#0a0612;}
+
+  /* ---------- liquid background ---------- */
+  .liquid-field{
+    position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none;
+  }
+  .blob{
+    position:absolute; border-radius:50%;
+    filter: blur(60px);
+    opacity:0.65;
+    mix-blend-mode:screen;
+    animation: drift 22s ease-in-out infinite;
+    will-change: transform;
+    transform:translateZ(0);
+  }
+  .blob.b1{ width:520px; height:520px; top:-120px; left:-100px; background:radial-gradient(circle at 30% 30%, var(--cyan), transparent 70%); animation-duration:26s;}
+  .blob.b2{ width:460px; height:460px; top:20%; right:-140px; background:radial-gradient(circle at 60% 40%, var(--violet), transparent 70%); animation-duration:30s; animation-delay:-6s;}
+  .blob.b3{ width:400px; height:400px; bottom:-100px; left:20%; background:radial-gradient(circle at 50% 50%, var(--pink), transparent 70%); animation-duration:24s; animation-delay:-12s;}
+
+  @keyframes drift{
+    0%,100%{ transform:translate3d(0,0,0) scale(1);}
+    25%{ transform:translate3d(40px,-30px,0) scale(1.08);}
+    50%{ transform:translate3d(-20px,30px,0) scale(0.95);}
+    75%{ transform:translate3d(30px,20px,0) scale(1.05);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .blob{animation:none;}
+  }
+
+  /* noise texture overlay */
+  .noise{
+    position:fixed; inset:0; z-index:1; pointer-events:none; opacity:0.035;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  header{ position:relative; z-index:1000; }
+  main, footer{ position:relative; z-index:2; }
+
+  /* ---------- nav ---------- */
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 26px;
+    max-width:1100px;
+    width:calc(100% - 28px);
+    position:fixed; top:34px; left:50%;
+    transform:translate(-50%,0) translateZ(0);
+    z-index:999;
+    will-change:transform;
+    -webkit-backdrop-filter:blur(18px) saturate(160%);
+    backdrop-filter:blur(18px) saturate(160%);
+    background:rgba(20,17,30,0.7);
+    border:1px solid var(--glass-brd);
+    border-radius:26px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.14), 0 14px 40px -16px rgba(0,0,0,0.65);
+  }
+  .nav-wrap{ padding:0 5vw; }
+  .logo{
+    display:flex; align-items:center; gap:10px;
+    font-family:'Plus Jakarta Sans'; font-weight:800; font-size:1.15rem;
+  }
+  .logo-drop{
+    width:26px; height:26px;
+    background:linear-gradient(135deg, var(--cyan), var(--violet) 55%, var(--pink));
+    border-radius:42% 58% 63% 37% / 45% 40% 60% 55%;
+    animation: dropmorph 6s ease-in-out infinite;
+    box-shadow:0 0 20px rgba(167,139,250,0.55);
+  }
+  @keyframes dropmorph{
+    0%,100%{ border-radius:42% 58% 63% 37% / 45% 40% 60% 55%; }
+    50%{ border-radius:58% 42% 40% 60% / 60% 55% 45% 40%; }
+  }
+  nav .links{ display:flex; gap:32px; font-size:0.92rem; color:var(--dim); }
+  nav .links a:hover{ color:var(--text); }
+  .nav-cta{
+    position:relative; overflow:hidden;
+    padding:9px 20px; border-radius:100px;
+    background:linear-gradient(135deg, var(--cyan), var(--violet));
+    color:#08060f; font-weight:700; font-size:0.88rem;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.5), inset 0 -6px 10px rgba(0,0,0,0.15), 0 6px 20px -8px rgba(167,139,250,0.6);
+  }
+  @media(max-width:760px){ nav .links{display:none;} }
+
+  /* ---------- hero ---------- */
+  .hero{
+    min-height:92vh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:135px 6vw 80px;
+  }
+  .eyebrow{
+    position:relative; overflow:hidden;
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:0.78rem; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--mercury); border:1px solid var(--glass-brd);
+    padding:7px 16px; border-radius:100px; background:var(--glass);
+    -webkit-backdrop-filter:var(--glass-blur); backdrop-filter:var(--glass-blur);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.25);
+    margin-bottom:28px;
+  }
+  .eyebrow .dot{ width:6px; height:6px; border-radius:50%; background:var(--cyan); box-shadow:0 0 8px var(--cyan);}
+  h1.hero-title{
+    font-size:clamp(2.6rem, 7vw, 5.2rem);
+    font-weight:800; line-height:1.02; max-width:15ch;
+  }
+  h1.hero-title .grad{
+    background:linear-gradient(100deg, var(--cyan), var(--violet) 45%, var(--pink));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    background-size:200% auto;
+    animation:flow 8s linear infinite;
+  }
+  @keyframes flow{ to{ background-position:200% center; } }
+  .hero p.sub{
+    margin-top:26px; font-size:1.08rem; color:var(--dim); max-width:46ch; line-height:1.6;
+  }
+  .hero-actions{ margin-top:40px; display:flex; gap:16px; flex-wrap:wrap; justify-content:center; }
+  .btn-primary{
+    position:relative; overflow:hidden;
+    padding:15px 32px; border-radius:100px; font-weight:700; font-size:0.98rem;
+    background:linear-gradient(135deg, var(--cyan), var(--violet) 55%, var(--pink));
+    color:#08060f;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.55),
+      inset 0 -8px 14px rgba(0,0,0,0.15),
+      0 10px 40px -8px rgba(167,139,250,0.55);
+    transition:transform .25s ease, box-shadow .25s ease;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:inset 0 1px 0 rgba(255,255,255,0.6), 0 14px 46px -6px rgba(167,139,250,0.7); }
+  .btn-ghost{
+    position:relative; overflow:hidden;
+    padding:15px 30px; border-radius:100px; font-weight:600; font-size:0.98rem;
+    border:1px solid var(--glass-brd); background:var(--glass); color:var(--text);
+    -webkit-backdrop-filter:var(--glass-blur); backdrop-filter:var(--glass-blur);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.25), inset 0 -1px 0 rgba(255,255,255,0.03);
+    transition:background .25s ease;
+  }
+  .btn-ghost:hover{ background:rgba(255,255,255,0.1); }
+  .hero-meta{ margin-top:22px; font-size:0.82rem; color:var(--dim); }
+
+  /* ---------- section shell ---------- */
+  section{ padding:100px 6vw; }
+  .section-head{ text-align:center; max-width:640px; margin:0 auto 60px; }
+  .section-head .tag{ color:var(--cyan); font-weight:700; font-size:0.8rem; letter-spacing:0.12em; text-transform:uppercase; }
+  .section-head h2{ font-size:clamp(1.8rem,4vw,2.6rem); margin-top:12px; }
+  .section-head p{ color:var(--dim); margin-top:14px; line-height:1.6; }
+
+  /* ---------- features ---------- */
+  .feature-grid{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; max-width:1080px; margin:0 auto;
+  }
+  @media(max-width:900px){ .feature-grid{grid-template-columns:repeat(2,1fr);} }
+  @media(max-width:600px){ .feature-grid{grid-template-columns:1fr;} }
+  .fcard{
+    position:relative; overflow:hidden;
+    transform:translateZ(0);
+    -webkit-transform:translateZ(0);
+    background:var(--glass); border:1px solid var(--glass-brd); border-radius:26px;
+    padding:30px 26px;
+    -webkit-backdrop-filter:var(--glass-blur); backdrop-filter:var(--glass-blur);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.22),
+      inset 0 -1px 0 rgba(255,255,255,0.02),
+      0 10px 34px -16px rgba(0,0,0,0.6);
+    transition:transform .3s ease, border-color .3s ease, background .3s ease, box-shadow .3s ease;
+  }
+  .fcard::before{
+    content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+    background:linear-gradient(135deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.02) 32%, transparent 55%);
+  }
+  .fcard:hover{ transform:translateY(-6px) translateZ(0); border-color:rgba(167,139,250,0.55); background:rgba(255,255,255,0.10);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.3),
+      0 16px 40px -14px rgba(167,139,250,0.35);
+  }
+  .ficon{
+    width:46px; height:46px; border-radius:15px; margin-bottom:18px;
+    display:flex; align-items:center; justify-content:center; font-size:1.2rem;
+    background:linear-gradient(140deg, rgba(255,255,255,0.14), rgba(255,255,255,0.02));
+    border:1px solid rgba(255,255,255,0.18);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -6px 12px rgba(0,0,0,0.25);
+    position:relative; z-index:1;
+  }
+  .fcard h3{ font-family:'Plus Jakarta Sans'; font-weight:700; font-size:1.05rem; margin-bottom:8px; }
+  .fcard p{ color:var(--dim); font-size:0.92rem; line-height:1.55; }
+
+  /* ---------- showcase / screenshots ---------- */
+  .showcase-track{
+    display:flex; gap:18px; overflow-x:auto; padding:10px 0 20px;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+  }
+  .showcase-track::-webkit-scrollbar{ height:6px; }
+  .showcase-track::-webkit-scrollbar-thumb{ background:var(--glass-brd); border-radius:10px; }
+  .shot{
+    flex:0 0 220px; height:440px; border-radius:32px; scroll-snap-align:center;
+    background:linear-gradient(160deg, #14101f, #0a0812 60%);
+    border:1px solid var(--glass-brd);
+    -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.18), 0 14px 40px -18px rgba(0,0,0,0.6);
+    position:relative; overflow:hidden;
+  }
+  .shot::before{
+    content:''; position:absolute; inset:0;
+    background:radial-gradient(circle at 30% 20%, rgba(111,227,255,0.22), transparent 55%),
+               radial-gradient(circle at 70% 80%, rgba(244,114,182,0.2), transparent 55%);
+  }
+  .shot .label{
+    position:absolute; bottom:20px; left:20px; right:20px;
+    font-size:0.82rem; color:var(--mercury); font-weight:600;
+  }
+
+  /* ---------- download panel ---------- */
+  .dl-panel{
+    position:relative; overflow:hidden;
+    transform:translateZ(0);
+    -webkit-transform:translateZ(0);
+    max-width:920px; margin:0 auto; text-align:center;
+    background:linear-gradient(160deg, rgba(111,227,255,0.06), rgba(167,139,250,0.06) 50%, rgba(244,114,182,0.06));
+    border:1px solid var(--glass-brd); border-radius:36px; padding:64px 6vw;
+    -webkit-backdrop-filter:var(--glass-blur); backdrop-filter:var(--glass-blur);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.25),
+      inset 0 -1px 0 rgba(255,255,255,0.03),
+      0 20px 60px -24px rgba(0,0,0,0.6);
+  }
+  .dl-panel::before{
+    content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+    background:linear-gradient(135deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.02) 30%, transparent 55%);
+  }
+  .dl-panel h2{ font-size:clamp(1.7rem,4vw,2.3rem); }
+  .dl-panel p{ color:var(--dim); margin-top:14px; max-width:48ch; margin-inline:auto; line-height:1.6;}
+  .dl-specs{
+    display:flex; gap:28px; justify-content:center; flex-wrap:wrap; margin-top:30px;
+    font-size:0.85rem; color:var(--dim);
+  }
+  .dl-specs b{ color:var(--text); display:block; font-size:1rem; }
+
+  /* ---------- faq ---------- */
+  .faq{ max-width:720px; margin:0 auto; display:flex; flex-direction:column; gap:14px; }
+  .faq-item{
+    position:relative; overflow:hidden;
+    transform:translateZ(0);
+    -webkit-transform:translateZ(0);
+    background:var(--glass); border:1px solid var(--glass-brd); border-radius:20px;
+    -webkit-backdrop-filter:var(--glass-blur); backdrop-filter:var(--glass-blur);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.2), 0 8px 24px -16px rgba(0,0,0,0.5);
+    padding:20px 22px; cursor:pointer;
+    transition:border-color .25s ease, background .25s ease;
+  }
+  .faq-item::before{
+    content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+    background:linear-gradient(135deg, rgba(255,255,255,0.13) 0%, transparent 40%);
+  }
+  .faq-item:hover{ border-color:rgba(167,139,250,0.4); background:rgba(255,255,255,0.09); }
+  .faq-item.open{ border-color:rgba(111,227,255,0.45); background:rgba(255,255,255,0.08); }
+  .faq-item .q{
+    display:flex; justify-content:space-between; align-items:center;
+    font-weight:600; font-size:1rem;
+  }
+  .faq-item .q .plus{ transition:transform .3s ease; color:var(--cyan); font-size:1.3rem; }
+  .faq-item.open .q .plus{ transform:rotate(45deg); }
+  .faq-item .a{
+    max-height:0; overflow:hidden; transition:max-height .35s ease, margin-top .35s ease;
+    color:var(--dim); font-size:0.92rem; line-height:1.6;
+  }
+  .faq-item.open .a{ max-height:200px; margin-top:14px; }
+
+  /* ---------- footer ---------- */
+  footer{
+    padding:60px 6vw 40px;
+    -webkit-backdrop-filter:blur(20px) saturate(160%); backdrop-filter:blur(20px) saturate(160%);
+    border-top:1px solid var(--glass-brd);
+    display:flex; flex-direction:column; align-items:center; gap:24px; text-align:center;
+  }
+  .social-row{ display:flex; gap:14px; flex-wrap:wrap; justify-content:center; }
+  .social-row a{
+    position:relative; overflow:hidden;
+    padding:9px 18px; border-radius:100px; border:1px solid var(--glass-brd);
+    background:var(--glass); -webkit-backdrop-filter:var(--glass-blur); backdrop-filter:var(--glass-blur);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.22);
+    font-size:0.85rem; font-weight:600;
+    transition:border-color .25s ease, color .25s ease;
+  }
+  .social-row a:hover{ border-color:var(--violet); color:var(--cyan); }
+  .btn-primary svg, .btn-ghost svg, .social-row a svg{ width:16px; height:16px; margin-right:6px; vertical-align:-3px; }
+  .ficon{ color:#cfe6ff; }
+  .ficon svg{ width:20px; height:20px; }
+  footer .fine{ color:var(--dim); font-size:0.8rem; }
+  footer .brand{ font-family:'Plus Jakarta Sans'; font-weight:800; }
+</style>
+</head>
+<body>
+
+<div class="liquid-field">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
+<div class="noise"></div>
+
+<header>
+  <div class="nav-wrap">
+  <nav>
+    <div class="logo"><span class="logo-drop"></span> MRiOS Launcher</div>
+    <div class="links">
+      <a href="#features">Features</a>
+      <a href="#showcase">Showcase</a>
+      <a href="#download">Download</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a href="#download" class="nav-cta">Get APK</a>
+  </nav>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero">
+    <div class="eyebrow"><span class="dot"></span> v6.8.3 · Rakshittips Mod</div>
+    <h1 class="hero-title">OS 27 MRiOS Glass, <span class="grad">on your Android.</span></h1>
+    <p class="sub">A smart, clean, and beautiful launcher inspired by the futuristic OS 27 MRiOS Glass design — premium translucency, real depth effects, and buttery-smooth responsiveness for your daily home screen.</p>
+    <div class="hero-actions">
+      <a href="#download" class="btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg> Download APK</a>
+      <a href="#showcase" class="btn-ghost"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg> See it in motion</a>
+  </section>
+
+  <section id="features">
+    <div class="section-head">
+      <div class="tag">Why MRiOS</div>
+      <h2>A launcher that flows with you</h2>
+      <p>Every interaction is built around one idea — nothing on your home screen should feel static.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="fcard">
+        <div class="ficon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></div>
+        <h3>Futuristic MRiOS Glass Interface</h3>
+        <p>Translucent layers that react beautifully to your wallpaper, with premium glassmorphic depth and a clean, readable layout that's easy on the eyes.</p>
+      </div>
+      <div class="fcard">
+        <div class="ficon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg></div>
+        <h3>Smart App Library</h3>
+        <p>Apps auto-sort into intuitive categories — Social, Games, Productivity, Utilities — so you can find any app in less than a second.</p>
+      </div>
+      <div class="fcard">
+        <div class="ficon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8Z"/><circle cx="6.5" cy="11.5" r="1.4" fill="currentColor" stroke="none"/><circle cx="9.5" cy="7.5" r="1.4" fill="currentColor" stroke="none"/><circle cx="14.5" cy="7.5" r="1.4" fill="currentColor" stroke="none"/><circle cx="17.5" cy="11.5" r="1.4" fill="currentColor" stroke="none"/></svg></div>
+        <h3>Custom Widgets &amp; Themes</h3>
+        <p>Switch between Glass and Transparent themes, plus fully integrated Weather, Clock, and Calendar widgets built to match the MRiOS Glass look.</p>
+      </div>
+      <div class="fcard">
+        <div class="ficon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div>
+        <h3>Swipe Down to Search</h3>
+        <p>Find apps instantly with a simple downward gesture, powered by a fast, lightweight indexer that never slows your device down.</p>
+      </div>
+      <div class="fcard">
+        <div class="ficon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg></div>
+        <h3>Safe &amp; Private Hidden Folder</h3>
+        <p>Keep sensitive apps out of sight with a secure hidden space built right into the launcher.</p>
+      </div>
+      <div class="fcard">
+        <div class="ficon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="4" y1="21" y2="14"/><line x1="4" x2="4" y1="10" y2="3"/><line x1="12" x2="12" y1="21" y2="12"/><line x1="12" x2="12" y1="8" y2="3"/><line x1="20" x2="20" y1="21" y2="16"/><line x1="20" x2="20" y1="12" y2="3"/><line x1="1" x2="7" y1="14" y2="14"/><line x1="9" x2="15" y1="8" y2="8"/><line x1="17" x2="23" y1="16" y2="16"/></svg></div>
+        <h3>Effortless Personalization</h3>
+        <p>Rename apps and swap icons in seconds, with an optimized wallpaper preview engine to set up your perfect look with zero hassle.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="showcase">
+    <div class="section-head">
+      <div class="tag">Showcase</div>
+      <h2>See the flow</h2>
+      <p>A quick look at the home screen, drawer, and theme studio in action.</p>
+    </div>
+    <div class="showcase-track">
+      <div class="shot"><div class="label">Home Screen</div></div>
+      <div class="shot"><div class="label">App Drawer</div></div>
+      <div class="shot"><div class="label">Theme Studio</div></div>
+      <div class="shot"><div class="label">Live Wallpaper</div></div>
+      <div class="shot"><div class="label">Widget Stack</div></div>
+    </div>
+  </section>
+
+  <section id="download">
+    <div class="dl-panel">
+      <h2>Join the MRiOS Glass revolution</h2>
+      <p>Why settle for standard when you can have state-of-the-art? Download MRiOS Launcher today and elevate your Android experience to a whole new level of beauty.</p>
+      <div class="hero-actions" style="margin-top:34px;">
+        <a href="#" class="btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg> Download v6.8.3 APK</a>
+      </div>
+      <div class="dl-specs">
+        <div><b>Android 8+</b>Minimum OS</div>
+        <div><b>No Root</b>Install type</div>
+        <div><b>Glass / Transparent</b>Themes included</div>
+        <div><b>EN / HI</b>Languages</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="section-head">
+      <div class="tag">FAQ</div>
+      <h2>Good to know</h2>
+    </div>
+    <div class="faq">
+      <div class="faq-item open">
+        <div class="q">Is MRiOS Launcher safe to install? <span class="plus">+</span></div>
+        <div class="a">Yes — the APK is scanned before release and doesn't request any permissions beyond what a standard launcher needs.</div>
+      </div>
+      <div class="faq-item">
+        <div class="q">Will it drain my battery? <span class="plus">+</span></div>
+        <div class="a">The MRiOS animations are GPU-accelerated and lightweight. You can also disable the live wallpaper engine in Settings to save power.</div>
+      </div>
+      <div class="faq-item">
+        <div class="q">Can I keep my existing icon pack? <span class="plus">+</span></div>
+        <div class="a">Yes, third-party icon packs are supported, though the morph animation looks best with the built-in MRiOS icon set.</div>
+      </div>
+      <div class="faq-item">
+        <div class="q">How do I get updates? <span class="plus">+</span></div>
+        <div class="a">Join the Rakshittips Telegram channel — new builds and changelogs are posted there first.</div>
+      </div>
+    </div>
+  </section>
+
+<footer>
+  <div class="logo"><span class="logo-drop"></span> MRiOS Launcher</div>
+  <div class="social-row">
+    <a href="https://t.me/Mr_Rakshit_2_0" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.5 2.5 2.3 10.1c-1 .4-1 1.6.1 1.9l4.6 1.4 1.8 5.6c.2.7 1.1.9 1.6.3l2.5-2.7 4.7 3.5c.8.6 1.9.1 2.1-.9l3.1-15c.2-1-.7-1.7-1.3-1.7ZM8.4 14.2l9.3-6.9c.3-.2.6.1.3.4L10.2 15l-.3 3-1.5-3.8Z"/></svg> Telegram</a>
+    <a href="https://youtube.com/@mr._rakshit_2.0" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.5V8.5l6.3 3.5Z"/></svg> YouTube</a>
+    <a href="https://github.com/Rakshittips" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.1 3.3 9.4 7.9 11 .6.1.8-.3.8-.6v-2.2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.3 11.3 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6a11.5 11.5 0 0 0 7.9-11A11.5 11.5 0 0 0 12 .5Z"/></svg> GitHub</a>
+    <a href="https://instagram.com/mr._rakshit_2.0" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg> Instagram</a>
+    <a href="https://rakshittips.github.io/Rakshittips/index.html" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></svg> Rakshittips</a>
+  </div>
+  <div class="fine">Built by <span class="brand">Rakshittips</span> — not affiliated with any official launcher app.</div>
+
+<script>
+  document.querySelectorAll('.faq-item').forEach(item=>{
+    item.addEventListener('click', ()=>{
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+      if(!wasOpen) item.classList.add('open');
+    });
+  });
+</script>
+
+</body>
+</html>
