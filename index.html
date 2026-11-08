@@ -139,26 +139,56 @@
   }
   nav .links{ display:flex; gap:32px; font-size:0.92rem; color:var(--dim); }
   nav .links a:hover{ color:var(--text); }
+  .nav-actions{
+    display:flex; align-items:center; gap:8px; flex-shrink:0;
+  }
+  .nav-about-btn{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:8px 14px; border-radius:100px;
+    font-size:0.84rem; font-weight:600; color:var(--text);
+    background:var(--glass); border:1px solid var(--glass-brd);
+    -webkit-backdrop-filter:var(--glass-blur); backdrop-filter:var(--glass-blur);
+    transition:background .2s ease, border-color .2s ease, transform .15s ease;
+    white-space:nowrap;
+  }
+  .nav-about-btn svg{ width:14px; height:14px; }
+  .nav-about-btn:hover{
+    background:rgba(255,255,255,0.1); border-color:var(--cyan); color:var(--cyan);
+    transform:translateY(-1px);
+  }
   .nav-cta{
     position:relative; overflow:hidden;
-    padding:9px 20px; border-radius:100px;
+    padding:8px 16px; border-radius:100px;
     background:linear-gradient(135deg, var(--cyan), var(--violet));
-    color:#08060f; font-weight:700; font-size:0.88rem;
+    color:#08060f; font-weight:700; font-size:0.84rem;
     box-shadow:inset 0 1px 0 rgba(255,255,255,0.5), inset 0 -6px 10px rgba(0,0,0,0.15), 0 6px 20px -8px rgba(167,139,250,0.6);
     flex-shrink:0; white-space:nowrap;
+    display:inline-flex; align-items:center; gap:6px;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .nav-cta svg{ width:13px; height:13px; }
+  .nav-cta:hover{
+    transform:translateY(-1px);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.6), 0 8px 25px -6px rgba(167,139,250,0.7);
   }
   @media(max-width:760px){
     nav{
       top:16px;
-      padding:10px 16px;
+      padding:10px 14px;
       width:calc(100% - 24px);
       border-radius:20px;
     }
     nav .links{display:none;}
-    .brand-name{font-size:0.95rem;}
-    .brand-by{font-size:0.62rem;}
-    .nav-cta{padding:8px 16px; font-size:0.82rem;}
+    .brand-name{font-size:0.92rem;}
+    .brand-by{font-size:0.6rem;}
+    .nav-actions{gap:6px;}
+    .nav-about-btn{padding:7px 11px; font-size:0.78rem;}
+    .nav-cta{padding:7px 13px; font-size:0.78rem;}
     .hero{padding-top:110px;}
+  }
+  @media(max-width:380px){
+    .nav-about-btn span{display:none;}
+    .nav-about-btn{padding:7px 9px;}
   }
 
   /* ---------- hero ---------- */
@@ -558,10 +588,18 @@
       <a href="#showcase">Showcase</a>
       <a href="#download">Download</a>
       <a href="#about">About Me</a>
-      <a href="#support">Donate</a>
       <a href="#faq">FAQ</a>
     </div>
-    <a href="#download" class="nav-cta">Get APK</a>
+    <div class="nav-actions">
+      <a href="#about" class="nav-about-btn" title="About Rakshittips">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>About</span>
+      </a>
+      <a href="#support" class="nav-cta" title="Donate to Rakshittips">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        <span>Donate</span>
+      </a>
+    </div>
   </nav>
   </div>
 </header>
