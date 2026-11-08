@@ -114,10 +114,26 @@
   .nav-wrap{ padding:0 5vw; }
   .logo{
     display:flex; align-items:center; gap:10px;
-    font-family:'Plus Jakarta Sans'; font-weight:800; font-size:1.15rem;
+  }
+  .brand-text{
+    display:flex; flex-direction:column; justify-content:center;
+  }
+  .brand-name{
+    font-family:'Plus Jakarta Sans', sans-serif; font-weight:800; font-size:1.05rem;
+    line-height:1.15; white-space:nowrap; color:var(--text);
+  }
+  .brand-by{
+    font-size:0.68rem; font-weight:700; color:var(--cyan);
+    letter-spacing:0.04em; line-height:1.1; margin-top:1px; white-space:nowrap;
+  }
+  .dev-badge{
+    font-size:0.7rem; font-weight:700; letter-spacing:0.04em;
+    color:var(--cyan); background:rgba(111,227,255,0.12);
+    border:1px solid rgba(111,227,255,0.3); padding:3px 9px;
+    border-radius:100px; text-transform:none;
   }
   .logo-icon{
-    width:32px; height:32px; border-radius:9px;
+    width:32px; height:32px; border-radius:9px; flex-shrink:0;
     object-fit:cover; display:block;
     box-shadow:0 0 16px rgba(167,139,250,0.5), inset 0 1px 0 rgba(255,255,255,0.3);
   }
@@ -129,8 +145,21 @@
     background:linear-gradient(135deg, var(--cyan), var(--violet));
     color:#08060f; font-weight:700; font-size:0.88rem;
     box-shadow:inset 0 1px 0 rgba(255,255,255,0.5), inset 0 -6px 10px rgba(0,0,0,0.15), 0 6px 20px -8px rgba(167,139,250,0.6);
+    flex-shrink:0; white-space:nowrap;
   }
-  @media(max-width:760px){ nav .links{display:none;} }
+  @media(max-width:760px){
+    nav{
+      top:16px;
+      padding:10px 16px;
+      width:calc(100% - 24px);
+      border-radius:20px;
+    }
+    nav .links{display:none;}
+    .brand-name{font-size:0.95rem;}
+    .brand-by{font-size:0.62rem;}
+    .nav-cta{padding:8px 16px; font-size:0.82rem;}
+    .hero{padding-top:110px;}
+  }
 
   /* ---------- hero ---------- */
   .hero{
@@ -322,6 +351,167 @@
   }
   .faq-item.open .a{ max-height:200px; margin-top:14px; }
 
+  /* ---------- about me ---------- */
+  .about-card{
+    max-width:760px; margin:0 auto; padding:40px 36px;
+    border-radius:32px;
+  }
+  .about-header{
+    display:flex; align-items:center; gap:22px; flex-wrap:wrap;
+  }
+  .about-avatar-wrap{
+    position:relative; width:80px; height:80px; flex-shrink:0;
+  }
+  .about-avatar{
+    width:100%; height:100%; border-radius:24px; object-fit:cover;
+    box-shadow:0 0 24px rgba(167,139,250,0.5), inset 0 1px 0 rgba(255,255,255,0.4);
+    border:1px solid rgba(255,255,255,0.2);
+  }
+  .online-indicator{
+    position:absolute; bottom:-2px; right:-2px; width:16px; height:16px;
+    background:#10b981; border:3px solid #0c0a16; border-radius:50%;
+    box-shadow:0 0 8px #10b981;
+  }
+  .about-info h3{
+    font-size:1.45rem; font-weight:800; display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  }
+  .creator-badge{
+    font-size:0.72rem; font-weight:700; color:var(--cyan); background:rgba(111,227,255,0.12);
+    border:1px solid rgba(111,227,255,0.3); padding:3px 10px; border-radius:100px;
+    letter-spacing:0.04em; text-transform:uppercase;
+  }
+  .about-role{
+    color:var(--dim); font-size:0.92rem; margin-top:4px; font-weight:500;
+  }
+  .about-tags{
+    display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;
+  }
+  .about-pill{
+    font-size:0.75rem; color:var(--mercury); background:rgba(255,255,255,0.05);
+    border:1px solid var(--glass-brd); padding:4px 10px; border-radius:100px;
+  }
+  .about-bio{
+    margin-top:24px; padding-top:22px; border-top:1px solid rgba(255,255,255,0.08);
+    color:var(--dim); font-size:0.95rem; line-height:1.7; display:flex; flex-direction:column; gap:12px;
+  }
+  .about-bio strong{ color:var(--text); }
+  .about-grid{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; margin-top:26px;
+  }
+  @media(max-width:560px){ .about-grid{grid-template-columns:1fr;} }
+  .about-stat{
+    background:rgba(255,255,255,0.03); border:1px solid var(--glass-brd);
+    border-radius:18px; padding:16px 14px; text-align:center;
+  }
+  .about-stat .stat-num{
+    display:block; font-size:1.35rem; font-weight:800; color:var(--cyan);
+  }
+  .about-stat .stat-lbl{
+    display:block; font-size:0.78rem; color:var(--dim); margin-top:4px; font-weight:600;
+  }
+  .about-socials{
+    display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:28px;
+  }
+  .social-btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:10px 18px; border-radius:100px; font-size:0.86rem; font-weight:600;
+    border:1px solid var(--glass-brd); background:var(--glass); color:var(--text);
+    -webkit-backdrop-filter:var(--glass-blur); backdrop-filter:var(--glass-blur);
+    transition:transform .2s ease, border-color .2s ease, background .2s ease, color .2s ease;
+  }
+  .social-btn svg{ width:16px; height:16px; }
+  .social-btn:hover{
+    transform:translateY(-2px); border-color:var(--cyan); color:var(--cyan);
+    background:rgba(255,255,255,0.08);
+  }
+  @media(max-width:760px){
+    .about-card{ padding:26px 20px; border-radius:24px; }
+    .about-header{ justify-content:center; text-align:center; }
+    .about-info h3{ justify-content:center; }
+    .about-tags{ justify-content:center; }
+  }
+
+  /* ---------- donate / support ---------- */
+  .donate-panel{
+    margin-top:32px;
+    padding:28px 24px;
+    border-radius:26px;
+    background:linear-gradient(145deg, rgba(111,227,255,0.06), rgba(167,139,250,0.08) 50%, rgba(244,114,182,0.06));
+    border:1px solid rgba(167,139,250,0.3);
+    text-align:center;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.2), 0 12px 36px -12px rgba(167,139,250,0.25);
+  }
+  .donate-header{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    margin-bottom:8px;
+  }
+  .donate-icon{
+    width:36px; height:36px; border-radius:10px;
+    background:linear-gradient(135deg, #f472b6, #a78bfa);
+    display:flex; align-items:center; justify-content:center; color:#0c0a16;
+    box-shadow:0 0 16px rgba(244,114,182,0.5);
+  }
+  .donate-icon svg{ width:20px; height:20px; fill:currentColor; }
+  .donate-panel h3{
+    font-size:1.25rem; font-weight:800;
+  }
+  .donate-panel p{
+    color:var(--dim); font-size:0.9rem; max-width:48ch; margin:0 auto 20px; line-height:1.55;
+  }
+  .upi-box{
+    display:inline-flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:10px 16px; border-radius:14px;
+    background:rgba(12,10,22,0.85); border:1px solid rgba(255,255,255,0.18);
+    max-width:100%; box-shadow:inset 0 1px 0 rgba(255,255,255,0.1);
+  }
+  .upi-text{
+    font-family:monospace; font-size:0.95rem; font-weight:700; color:var(--cyan);
+    letter-spacing:0.02em; word-break:break-all;
+  }
+  .copy-btn{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:7px 14px; border-radius:8px; font-size:0.8rem; font-weight:700;
+    background:rgba(255,255,255,0.1); color:var(--text); border:1px solid var(--glass-brd);
+    cursor:pointer; transition:background .2s, border-color .2s, transform .15s;
+    white-space:nowrap;
+  }
+  .copy-btn:hover{ background:rgba(255,255,255,0.18); border-color:var(--cyan); }
+  .copy-btn.copied{ background:#10b981; color:#08060f; border-color:#10b981; }
+  .donate-actions{
+    display:flex; justify-content:center; align-items:center; gap:12px; flex-wrap:wrap; margin-top:18px;
+  }
+  .donate-cta{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:11px 22px; border-radius:100px; font-weight:700; font-size:0.88rem;
+    background:linear-gradient(135deg, var(--cyan), var(--violet));
+    color:#08060f; box-shadow:0 6px 20px -6px rgba(167,139,250,0.5);
+    transition:transform .2s ease;
+  }
+  .donate-cta:hover{ transform:translateY(-2px); }
+  .qr-toggle-btn{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:11px 20px; border-radius:100px; font-weight:600; font-size:0.88rem;
+    background:var(--glass); border:1px solid var(--glass-brd); color:var(--text);
+    cursor:pointer; transition:background .2s ease;
+  }
+  .qr-toggle-btn:hover{ background:rgba(255,255,255,0.1); }
+  .qr-container{
+    margin-top:20px; display:inline-flex; flex-direction:column; align-items:center;
+    padding:16px; border-radius:18px; background:rgba(255,255,255,0.04);
+    border:1px solid var(--glass-brd);
+  }
+  .qr-img{
+    width:150px; height:150px; border-radius:12px; background:#fff; padding:6px;
+  }
+  .upi-badges{
+    display:flex; align-items:center; justify-content:center; gap:8px; margin-top:16px;
+    font-size:0.75rem; color:var(--dim); flex-wrap:wrap;
+  }
+  .upi-badge-tag{
+    padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.1); font-weight:600; color:var(--mercury);
+  }
+
   footer{
     padding:60px 6vw 40px;
     -webkit-backdrop-filter:blur(20px) saturate(160%); backdrop-filter:blur(20px) saturate(160%);
@@ -356,11 +546,19 @@
 <header>
   <div class="nav-wrap">
   <nav>
-    <div class="logo"><img class="logo-icon" src="https://raw.githubusercontent.com/Rakshittips/MRiOS-Launcher/refs/heads/main/assets/mrios.png" alt="MRiOS Launcher icon"> MRiOS Launcher</div>
+    <div class="logo">
+      <img class="logo-icon" src="https://raw.githubusercontent.com/Rakshittips/MRiOS-Launcher/refs/heads/main/assets/mrios.png" alt="MRiOS Launcher icon">
+      <div class="brand-text">
+        <span class="brand-name">MRiOS Launcher</span>
+        <span class="brand-by">by Rakshittips</span>
+      </div>
+    </div>
     <div class="links">
       <a href="#features">Features</a>
       <a href="#showcase">Showcase</a>
       <a href="#download">Download</a>
+      <a href="#about">About Me</a>
+      <a href="#support">Donate</a>
       <a href="#faq">FAQ</a>
     </div>
     <a href="#download" class="nav-cta">Get APK</a>
@@ -371,7 +569,7 @@
 <main>
 
   <section class="hero">
-    <div class="eyebrow"><span class="dot"></span> V2 · Rakshittips Mod</div>
+    <div class="eyebrow"><span class="dot"></span> V2 · By Developer Rakshittips</div>
     <h1 class="hero-title">OS 27 MRiOS Glass, <span class="grad">on your Android.</span></h1>
     <p class="sub">A smart, clean, and beautiful launcher inspired by the futuristic OS 27 MRiOS Glass design — premium translucency, real depth effects, and buttery-smooth responsiveness for your daily home screen.</p>
     <div class="hero-actions">
@@ -451,6 +649,121 @@
         <div><b>No Root</b>Install type</div>
         <div><b>Glass / Transparent</b>Themes included</div>
         <div><b>EN / HI</b>Languages</div>
+        <div><b>Rakshittips</b>Developer</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <a id="developer" style="position:relative; top:-100px; display:block; visibility:hidden;"></a>
+    <div class="section-head">
+      <div class="tag">About The Creator</div>
+      <h2>About Me — Rakshittips</h2>
+      <p>The mind and developer behind MRiOS Launcher, bringing modern liquid glass aesthetics and fluid home screens to Android.</p>
+    </div>
+    <div class="about-card glass">
+      <div class="about-header">
+        <div class="about-avatar-wrap">
+          <img src="https://raw.githubusercontent.com/Rakshittips/MRiOS-Launcher/refs/heads/main/assets/mrios.png" alt="Rakshittips" class="about-avatar">
+          <span class="online-indicator" title="Creator Verified"></span>
+        </div>
+        <div class="about-info">
+          <h3>Rakshittips <span class="creator-badge">Creator &amp; Modder</span></h3>
+          <p class="about-role">Android Customizer · UI Designer · Tech Creator</p>
+          <div class="about-tags">
+            <span class="about-pill">🎨 Liquid Glass UI</span>
+            <span class="about-pill">⚡ Android Customization</span>
+            <span class="about-pill">🛠️ Launcher Mods</span>
+            <span class="about-pill">📱 Widget Studio</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="about-bio">
+        <p>
+          Hello! I'm <strong>Rakshit</strong> (known everywhere as <strong>Rakshittips</strong>). I specialize in creating premium Android customization mods, futuristic launcher experiences, and aesthetics inspired by modern iOS and glassmorphic designs.
+        </p>
+        <p>
+          <strong>MRiOS Launcher</strong> was built with a vision to deliver fluid liquid glass interfaces, instant search, organized app categories, and clean widgets to everyone — requiring <strong>no root</strong> and keeping performance fast and lightweight.
+        </p>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-stat">
+          <span class="stat-num">MRiOS V2</span>
+          <span class="stat-lbl">Latest Mod Version</span>
+        </div>
+        <div class="about-stat">
+          <span class="stat-num">No Root</span>
+          <span class="stat-lbl">Android 8.0+ Ready</span>
+        </div>
+        <div class="about-stat">
+          <span class="stat-num">Community</span>
+          <span class="stat-lbl">Mods &amp; Updates</span>
+        </div>
+      </div>
+
+      <div class="about-socials">
+        <a href="https://t.me/Mr_Rakshit_2_0" target="_blank" class="social-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.5 2.5 2.3 10.1c-1 .4-1 1.6.1 1.9l4.6 1.4 1.8 5.6c.2.7 1.1.9 1.6.3l2.5-2.7 4.7 3.5c.8.6 1.9.1 2.1-.9l3.1-15c.2-1-.7-1.7-1.3-1.7ZM8.4 14.2l9.3-6.9c.3-.2.6.1.3.4L10.2 15l-.3 3-1.5-3.8Z"/></svg> Telegram Channel
+        </a>
+        <a href="https://youtube.com/@mr._rakshit_2.0" target="_blank" class="social-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.5V8.5l6.3 3.5Z"/></svg> YouTube Channel
+        </a>
+        <a href="https://rakshittips.github.io/Rakshittips/index.html" target="_blank" class="social-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></svg> Portfolio
+        </a>
+        <a href="https://github.com/Rakshittips" target="_blank" class="social-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.1 3.3 9.4 7.9 11 .6.1.8-.3.8-.6v-2.2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.3 11.3 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6a11.5 11.5 0 0 0 7.9-11A11.5 11.5 0 0 0 12 .5Z"/></svg> GitHub
+        </a>
+        <a href="https://instagram.com/mr._rakshit_2.0" target="_blank" class="social-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg> Instagram
+        </a>
+      </div>
+
+      <div class="donate-panel">
+        <a id="support" style="position:relative; top:-120px; display:block; visibility:hidden;"></a>
+        <div class="donate-header">
+          <div class="donate-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          </div>
+          <h3>Support &amp; Donate to Rakshittips</h3>
+        </div>
+        <p>
+          MRiOS Launcher is 100% free, community-driven, and ad-free. If you love the liquid glass experience and would like to support upcoming versions, mods, and hosting, you can contribute via UPI.
+        </p>
+
+        <div class="upi-box">
+          <span class="upi-text" id="upiIdText">rakshitdhakariya6@oksbi</span>
+          <button type="button" class="copy-btn" id="copyUpiBtn" onclick="copyUpi()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span id="copyBtnText">Copy UPI</span>
+          </button>
+        </div>
+
+        <div class="donate-actions">
+          <a href="upi://pay?pa=rakshitdhakariya6@oksbi&pn=Rakshittips&cu=INR" class="donate-cta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Pay with UPI App
+          </a>
+          <button type="button" class="qr-toggle-btn" id="qrToggleBtn" onclick="toggleQr()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            <span id="qrToggleText">Show QR Code</span>
+          </button>
+        </div>
+
+        <div class="qr-container" id="qrContainer" style="display:none;">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=rakshitdhakariya6@oksbi%26pn=Rakshittips%26cu=INR" alt="UPI QR Code - rakshitdhakariya6@oksbi" class="qr-img" loading="lazy">
+          <span style="font-size:0.78rem; color:var(--dim); margin-top:8px;">Scan with Google Pay, PhonePe, Paytm, or BHIM</span>
+        </div>
+
+        <div class="upi-badges">
+          <span class="upi-badge-tag">Google Pay</span>
+          <span class="upi-badge-tag">PhonePe</span>
+          <span class="upi-badge-tag">Paytm</span>
+          <span class="upi-badge-tag">BHIM UPI</span>
+          <span class="upi-badge-tag">SBI UPI</span>
+        </div>
       </div>
     </div>
   </section>
@@ -483,15 +796,21 @@
 </main>
 
 <footer>
-  <div class="logo"><img class="logo-icon" src="https://raw.githubusercontent.com/Rakshittips/MRiOS-Launcher/refs/heads/main/assets/mrios.png" alt="MRiOS Launcher icon"> MRiOS Launcher</div>
+  <div class="logo">
+    <img class="logo-icon" src="https://raw.githubusercontent.com/Rakshittips/MRiOS-Launcher/refs/heads/main/assets/mrios.png" alt="MRiOS Launcher icon">
+    <div class="brand-text">
+      <span class="brand-name">MRiOS Launcher</span>
+      <span class="brand-by">by Rakshittips</span>
+    </div>
+  </div>
   <div class="social-row">
     <a href="https://t.me/Mr_Rakshit_2_0" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.5 2.5 2.3 10.1c-1 .4-1 1.6.1 1.9l4.6 1.4 1.8 5.6c.2.7 1.1.9 1.6.3l2.5-2.7 4.7 3.5c.8.6 1.9.1 2.1-.9l3.1-15c.2-1-.7-1.7-1.3-1.7ZM8.4 14.2l9.3-6.9c.3-.2.6.1.3.4L10.2 15l-.3 3-1.5-3.8Z"/></svg> Telegram</a>
     <a href="https://youtube.com/@mr._rakshit_2.0" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.5V8.5l6.3 3.5Z"/></svg> YouTube</a>
     <a href="https://github.com/Rakshittips" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.1 3.3 9.4 7.9 11 .6.1.8-.3.8-.6v-2.2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.3 11.3 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6a11.5 11.5 0 0 0 7.9-11A11.5 11.5 0 0 0 12 .5Z"/></svg> GitHub</a>
     <a href="https://instagram.com/mr._rakshit_2.0" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg> Instagram</a>
-    <a href="https://rakshittips.github.io/Rakshittips/index.html" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></svg> Rakshittips</a>
+    <a href="https://rakshittips.github.io/Rakshittips/index.html" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></svg> Portfolio</a>
   </div>
-  <div class="fine">Built by <span class="brand">Rakshittips</span> — not affiliated with any official launcher app.</div>
+  <div class="fine">Developed &amp; created by <span class="brand">Rakshittips</span> — not affiliated with any official launcher app.</div>
 </footer>
 
 <script>
@@ -502,6 +821,53 @@
       if(!wasOpen) item.classList.add('open');
     });
   });
+
+  function copyUpi() {
+    const upiId = 'rakshitdhakariya6@oksbi';
+    const copyBtn = document.getElementById('copyUpiBtn');
+    const copyText = document.getElementById('copyBtnText');
+    const doFeedback = () => {
+      if (copyBtn && copyText) {
+        copyText.textContent = 'Copied!';
+        copyBtn.classList.add('copied');
+        setTimeout(() => {
+          copyText.textContent = 'Copy UPI';
+          copyBtn.classList.remove('copied');
+        }, 2200);
+      }
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(upiId).then(doFeedback).catch(() => {
+        fallbackCopy(upiId, doFeedback);
+      });
+    } else {
+      fallbackCopy(upiId, doFeedback);
+    }
+  }
+
+  function fallbackCopy(text, cb) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try { document.execCommand('copy'); } catch(e) {}
+    document.body.removeChild(ta);
+    if (cb) cb();
+  }
+
+  function toggleQr() {
+    const qrContainer = document.getElementById('qrContainer');
+    const qrToggleText = document.getElementById('qrToggleText');
+    if (!qrContainer) return;
+    const isHidden = qrContainer.style.display === 'none' || qrContainer.style.display === '';
+    qrContainer.style.display = isHidden ? 'inline-flex' : 'none';
+    if (qrToggleText) {
+      qrToggleText.textContent = isHidden ? 'Hide QR Code' : 'Show QR Code';
+    }
+  }
 </script>
 
 </body>
